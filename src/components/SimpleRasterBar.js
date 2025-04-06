@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./SimpleRasterBar.module.css";
 import { c64Colors } from "../constants/c64Colors";
 import { userAgentFromString } from "next/server";
@@ -25,13 +25,14 @@ export default function SimpleRasterBar() {
 
   const colorArrayRef = useRef([...colorArray]);
   const frameCounterRef = useRef(0);
-  const speed = 14;
+  const [speed, setSpeed] = useState(10);
+  const stretchFactor = 3;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx || !colorArrayRef) return;
-    const height = colorArray.length;
+    const height = colorArray.length * stretchFactor;
     const width = canvas.parentElement.offsetWidth;
 
     const draw = () => {
@@ -45,7 +46,8 @@ export default function SimpleRasterBar() {
         const colorArray = colorArrayRef.current;
         colorArray.forEach((color, index) => {
           ctx.fillStyle = color;
-          ctx.fillRect(0, index, width, 1);
+          const y = index * stretchFactor;
+          ctx.fillRect(0, y, width, stretchFactor);
         });
 
         // Rotate the array for animation

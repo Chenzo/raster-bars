@@ -4,4 +4,11 @@
 
 .rasterBarHolder {
     width: 100%;
+    border: 1px solid #000;
+    box-sizing: content-box;
+
+    canvas {
+        display: block;
+
+    }
 }

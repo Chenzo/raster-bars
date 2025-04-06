@@ -7,15 +7,15 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <article>
-        <h3>
-          simple raster
-        </h3>
-        <SimpleRasterBar />
+          <h3>
+            simple raster
+          </h3>
+          <SimpleRasterBar />
         </article>
       </main>
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         footer
-      </footer>
+      </footer> */}
     </div>
   );
 }
