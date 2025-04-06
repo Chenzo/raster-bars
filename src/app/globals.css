@@ -1,42 +1,33 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --c64blue: #0000aa;
+  --c64lightblue: #0088ff;
+  --c64black: #000000;
+  --c64white: #ffffff;
+  --c64red: #880000;
+  --c64cyan: #aaffee;
+  --c64violet: #cc44cc;
+  --c64green: #00cc55;
+  --c64yellow: #eeee77;
+  --c64orange: #dd8855;
+  --c64brown: #664400;
+  --c64lightred: #ff7777;
+  --c64darkgrey: #333333;
+  --c64grey: #777777;
+  --c64lightgreen: #aaff66;
+  --c64lightblue: #0088ff;
+  --c64lightgrey: #bbbbbb;
+  /* C64 color palette */
+
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--c64lightblue);
+  background: var(--c64blue);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }
