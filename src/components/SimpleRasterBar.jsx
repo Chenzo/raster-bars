@@ -2,28 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./SimpleRasterBar.module.css";
-import { c64Colors } from "../constants/c64Colors";
 
-export default function SimpleRasterBar() {
+
+export default function SimpleRasterBar({ colorArray, speed, stretchFactor, interlace }) {
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
 
-  const colorArray = [
-    c64Colors.blue,
-    c64Colors.lightblue,
-    c64Colors.lightgray,
-    c64Colors.lightgreen,
-    c64Colors.white,
-    c64Colors.white,
-    c64Colors.lightgreen,
-    c64Colors.lightgray,
-    c64Colors.lightblue,
-    c64Colors.blue,
-  ];
 
-  const [speed, setSpeed] = useState(3); // Higher = slower
+  /* const [speed, setSpeed] = useState(3); // Higher = slower
   const stretchFactor = 3;
-  const interlace = true;
+  const interlace = true; */
 
   const scrollOffsetRef = useRef(0);
   const frameCounterRef = useRef(0);
@@ -57,7 +45,7 @@ export default function SimpleRasterBar() {
     const draw = () => {
       const width = canvas.parentElement.offsetWidth;
       canvas.width = width;
-      canvas.height = 20; //visibleHeight;
+      canvas.height = visibleHeight;
 
       const scrollOffset = scrollOffsetRef.current;
       const start = scrollOffset % bufferHeight;
@@ -88,7 +76,7 @@ export default function SimpleRasterBar() {
   }, [speed, stretchFactor, interlace]);
 
   // Keyboard speed control (↑ slower, ↓ faster)
-  useEffect(() => {
+  /* useEffect(() => {
     const handleKeyDown = (evt) => {
       if (evt.key === "ArrowUp") {
         setSpeed((prev) => Math.min(60, prev + 1)); // slower
@@ -98,7 +86,7 @@ export default function SimpleRasterBar() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, []); */
 
   return (
     <section className={styles.rasterbar}>
