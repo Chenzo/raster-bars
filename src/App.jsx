@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./App.module.css";
 import { c64Colors } from "./constants/c64Colors";
 import SimpleRasterBar from "@/components/SimpleRasterBar";
+import { downloadRasterBarGif } from "./lib/downloadRasterBarGif";
 
 const blueGreen = [
   c64Colors.blue,
@@ -47,6 +48,17 @@ export default function App() {
   const [stretchFactor, setStretchFactor] = useState("2");
   const [speed, setSpeed] = useState("4");
   const [interlace, setInterlace] = useState(false);
+
+  const handleDownloadGif = () => {
+    downloadRasterBarGif({
+      colorArray: palettes[palette],
+      stretchFactor: Number(stretchFactor) || 1,
+      interlace,
+      width: Number(width) || 720,
+      speed: Number(speed) || 1,
+      filename: `${palette}-raster-bar.gif`,
+    });
+  };
 
   return (
     <div className={styles.page}>
@@ -144,6 +156,16 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        <div className={styles.downloadRow}>
+          <button
+            type="button"
+            className={styles.downloadButton}
+            onClick={handleDownloadGif}
+          >
+            Download GIF
+          </button>
+        </div>
       </main>
     </div>
   );

@@ -9,7 +9,8 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
   const animationFrameRef = useRef(null);
 
   const scrollOffsetRef = useRef(0);
-  const frameCounterRef = useRef(0);
+  const accumulatedMsRef = useRef(0);
+  const lastTimestampRef = useRef(null);
   const bufferRef = useRef([]);
 
   // Rebuild the stretched + interlaced buffer whenever the pattern options change
@@ -27,7 +28,7 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
 
     bufferRef.current = [...buffer, ...buffer]; // Double for seamless scroll
     scrollOffsetRef.current = 0;
-    frameCounterRef.current = 0;
+    accumulatedMsRef.current = 0;
   }, [colorArray, stretchFactor, interlace]);
 
   useEffect(() => {
@@ -35,7 +36,12 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const draw = () => {
+    // Scroll one pixel every msPerStep of real time, so speed matches
+    // regardless of the display's refresh rate (and matches the GIF export).
+    const msPerStep = speed * (1000 / 60);
+    lastTimestampRef.current = null;
+
+    const draw = (timestamp) => {
       const colorBuffer = bufferRef.current;
       const bufferHeight = colorBuffer.length;
       const visibleHeight = bufferHeight / 2;
@@ -43,6 +49,15 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
       const canvasWidth = canvas.parentElement.offsetWidth;
       canvas.width = canvasWidth;
       canvas.height = visibleHeight;
+
+      if (lastTimestampRef.current !== null) {
+        accumulatedMsRef.current += timestamp - lastTimestampRef.current;
+        while (accumulatedMsRef.current >= msPerStep) {
+          scrollOffsetRef.current += 1;
+          accumulatedMsRef.current -= msPerStep;
+        }
+      }
+      lastTimestampRef.current = timestamp;
 
       const scrollOffset = scrollOffsetRef.current;
       const start = scrollOffset % bufferHeight;
@@ -53,17 +68,10 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
         ctx.fillRect(0, y, canvasWidth, 1);
       }
 
-      // Delay the scroll using frameCounter
-      frameCounterRef.current++;
-      if (frameCounterRef.current >= speed) {
-        scrollOffsetRef.current += 1;
-        frameCounterRef.current = 0;
-      }
-
       animationFrameRef.current = requestAnimationFrame(draw);
     };
 
-    draw();
+    animationFrameRef.current = requestAnimationFrame(draw);
 
     return () => {
       if (animationFrameRef.current) {
