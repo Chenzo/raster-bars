@@ -1,24 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./SimpleRasterBar.module.css";
 
 
-export default function SimpleRasterBar({ colorArray, speed, stretchFactor, interlace }) {
+export default function SimpleRasterBar({ colorArray, speed, stretchFactor, interlace, width }) {
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
-
-
-  /* const [speed, setSpeed] = useState(3); // Higher = slower
-  const stretchFactor = 3;
-  const interlace = true; */
 
   const scrollOffsetRef = useRef(0);
   const frameCounterRef = useRef(0);
   const bufferRef = useRef([]);
 
-  // Build stretched + interlaced buffer once
-  if (bufferRef.current.length === 0) {
+  // Rebuild the stretched + interlaced buffer whenever the pattern options change
+  useEffect(() => {
     const buffer = [];
 
     colorArray.forEach((color, index) => {
@@ -31,20 +26,22 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
     });
 
     bufferRef.current = [...buffer, ...buffer]; // Double for seamless scroll
-  }
+    scrollOffsetRef.current = 0;
+    frameCounterRef.current = 0;
+  }, [colorArray, stretchFactor, interlace]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const colorBuffer = bufferRef.current;
-    const bufferHeight = colorBuffer.length;
-    const visibleHeight = bufferHeight / 2;
-
     const draw = () => {
-      const width = canvas.parentElement.offsetWidth;
-      canvas.width = width;
+      const colorBuffer = bufferRef.current;
+      const bufferHeight = colorBuffer.length;
+      const visibleHeight = bufferHeight / 2;
+
+      const canvasWidth = canvas.parentElement.offsetWidth;
+      canvas.width = canvasWidth;
       canvas.height = visibleHeight;
 
       const scrollOffset = scrollOffsetRef.current;
@@ -53,7 +50,7 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
       for (let y = 0; y < visibleHeight; y++) {
         const color = colorBuffer[(start + y) % bufferHeight];
         ctx.fillStyle = color;
-        ctx.fillRect(0, y, width, 1);
+        ctx.fillRect(0, y, canvasWidth, 1);
       }
 
       // Delay the scroll using frameCounter
@@ -73,23 +70,13 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [speed, stretchFactor, interlace]);
-
-  // Keyboard speed control (↑ slower, ↓ faster)
-  /* useEffect(() => {
-    const handleKeyDown = (evt) => {
-      if (evt.key === "ArrowUp") {
-        setSpeed((prev) => Math.min(60, prev + 1)); // slower
-      } else if (evt.key === "ArrowDown") {
-        setSpeed((prev) => Math.max(1, prev - 1)); // faster
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []); */
+  }, [speed]);
 
   return (
-    <section className={styles.rasterbar}>
+    <section
+      className={styles.rasterbar}
+      style={width ? { width: `${width}px` } : undefined}
+    >
       <div className={styles.rasterBarHolder}>
         <canvas ref={canvasRef} />
       </div>
