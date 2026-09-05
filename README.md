@@ -1,12 +1,18 @@
 # Raster Bars
 
+![Blue Green raster bar](img/blueGreen-raster-bar.gif)
+
 https://chenzo.github.io/raster-bars/
 
 ### Raster Bar Factory
 
 A browser-based raster bar generator with a Commodore 64 aesthetic. Pick a color palette, size, and speed, preview the scrolling bar live, and download it as an animated GIF.
 
-###C64 Colors:
+![Gold raster bar](img/gold-raster-bar.gif)
+
+---
+
+### C64 Colors:
 
 Black #000000  
 White #FFFFFF  
@@ -30,4 +36,4 @@ https://www.krajzewicz.de/blog/stretching-the-c64-palette.php
 
 ### GIF Export
 
-GIF downloads are encoded client-side with [gifenc](https://github.com/mattdesl/gifenc), a small, dependency-free GIF encoder that runs entirely in the browser (no server round-trip needed).
+GIF downloads are encoded client-side with [gifenc](https://github.com/mattdesl/gifenc)
