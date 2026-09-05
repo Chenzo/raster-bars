@@ -84,6 +84,28 @@
   justify-content: center;
 }
 
+.downloadRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.downloadButton {
+  font-family: var(--font-press-start);
+  font-size: calc(0.7rem + 3px);
+  padding: 0.75rem 1.5rem;
+  background: var(--c64lightblue);
+  color: var(--c64black);
+  border: 2px solid var(--c64lightblue);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.downloadButton:hover {
+  background: var(--c64black);
+  color: var(--c64lightblue);
+}
+
 @media (prefers-color-scheme: dark) {
   .page {
     --gray-rgb: 255, 255, 255;
