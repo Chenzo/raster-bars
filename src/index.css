@@ -5,6 +5,9 @@
   --font-geist-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-geist-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
 
+  --font-press-start: "Press Start 2P", monospace;
+  --font-vt323: "VT323", monospace;
+
   --c64blue: #0000aa;
   --c64lightblue: #0088ff;
   --c64black: #000000;
@@ -30,7 +33,12 @@
 body {
   color: var(--c64lightblue);
   background: var(--c64blue);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-vt323);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  border: 10px solid var(--c64lightblue);
 }
