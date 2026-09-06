@@ -21,10 +21,12 @@ export function downloadRasterBarGif({
   interlace,
   width,
   speed,
+  sizeMultiplier = 1,
   filename = "raster-bar.gif",
 }) {
   const pattern = buildPatternBuffer(colorArray, stretchFactor, interlace);
-  const height = pattern.length;
+  const cycleLength = pattern.length;
+  const height = Math.round(cycleLength * sizeMultiplier);
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -35,9 +37,9 @@ export function downloadRasterBarGif({
   const delay = Math.max(20, Math.round(speed * (1000 / 60)));
   let palette;
 
-  for (let frame = 0; frame < height; frame++) {
+  for (let frame = 0; frame < cycleLength; frame++) {
     for (let y = 0; y < height; y++) {
-      ctx.fillStyle = pattern[(frame + y) % height];
+      ctx.fillStyle = pattern[(frame + y) % cycleLength];
       ctx.fillRect(0, y, width, 1);
     }
 
