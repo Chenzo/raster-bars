@@ -1,61 +1,27 @@
 import { useState } from "react";
 import styles from "./App.module.css";
-import { c64Colors } from "./constants/c64Colors";
+import { palettes } from "./constants/palettes";
 import SimpleRasterBar from "@/components/SimpleRasterBar";
 import { downloadRasterBarGif } from "./lib/downloadRasterBarGif";
 
-const blueGreen = [
-  c64Colors.blue,
-  c64Colors.lightblue,
-  c64Colors.lightgray,
-  c64Colors.lightgreen,
-  c64Colors.white,
-  c64Colors.white,
-  c64Colors.lightgreen,
-  c64Colors.lightgray,
-  c64Colors.lightblue,
-  c64Colors.blue,
-];
-
-const simpleRed = [
-  c64Colors.red,
-  c64Colors.lightred,
-  c64Colors.white,
-  c64Colors.white,
-  c64Colors.lightred,
-  c64Colors.red,
-];
-
-const goldArray = [
-  c64Colors.brown,
-  c64Colors.orange,
-  c64Colors.yellow,
-  c64Colors.white,
-  c64Colors.yellow,
-  c64Colors.orange,
-  c64Colors.brown,
-];
-
-const palettes = {
-  blueGreen,
-  simpleRed,
-  gold: goldArray,
-};
-
 export default function App() {
-  const [palette, setPalette] = useState("blueGreen");
+  const [palette, setPalette] = useState(palettes[0].id);
   const [width, setWidth] = useState("720");
   const [stretchFactor, setStretchFactor] = useState("2");
   const [speed, setSpeed] = useState("4");
+  const [sizeMultiplier, setSizeMultiplier] = useState("1");
   const [interlace, setInterlace] = useState(false);
+
+  const selectedPalette = palettes.find((p) => p.id === palette);
 
   const handleDownloadGif = () => {
     downloadRasterBarGif({
-      colorArray: palettes[palette],
+      colorArray: selectedPalette.colors,
       stretchFactor: Number(stretchFactor) || 1,
       interlace,
       width: Number(width) || 720,
       speed: Number(speed) || 1,
+      sizeMultiplier: Number(sizeMultiplier) || 1,
       filename: `${palette}-raster-bar.gif`,
     });
   };
@@ -67,9 +33,10 @@ export default function App() {
 
         <section className={styles.preview}>
           <SimpleRasterBar
-            colorArray={palettes[palette]}
+            colorArray={selectedPalette.colors}
             speed={Number(speed)}
             stretchFactor={Number(stretchFactor) || 1}
+            sizeMultiplier={Number(sizeMultiplier) || 1}
             interlace={interlace}
             width={Number(width) || undefined}
           />
@@ -87,9 +54,11 @@ export default function App() {
                 value={palette}
                 onChange={(e) => setPalette(e.target.value)}
               >
-                <option value="blueGreen">Blue Green</option>
-                <option value="simpleRed">Simple Red</option>
-                <option value="gold">Gold</option>
+                {palettes.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.label}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -111,14 +80,38 @@ export default function App() {
               <label className={styles.menuFieldLabel} htmlFor="stretchFactor">
                 Stretch Factor
               </label>
-              <input
+              <select
                 className={styles.menuFieldInput}
                 id="stretchFactor"
                 name="stretchFactor"
-                type="text"
                 value={stretchFactor}
                 onChange={(e) => setStretchFactor(e.target.value)}
-              />
+              >
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.menuField}>
+              <label className={styles.menuFieldLabel} htmlFor="sizeMultiplier">
+                Size
+              </label>
+              <select
+                className={styles.menuFieldInput}
+                id="sizeMultiplier"
+                name="sizeMultiplier"
+                value={sizeMultiplier}
+                onChange={(e) => setSizeMultiplier(e.target.value)}
+              >
+                <option value="1">1</option>
+                <option value="1.25">1.25</option>
+                <option value="1.5">1.5</option>
+                <option value="1.75">1.75</option>
+                <option value="2">2</option>
+              </select>
             </div>
 
             <div className={styles.menuField}>
@@ -132,7 +125,11 @@ export default function App() {
                 value={speed}
                 onChange={(e) => setSpeed(e.target.value)}
               >
-                <option value="1">1 - Fastest</option>
+                <option value="0.1">0.1 - Fastest</option>
+                <option value="0.25">0.25</option>
+                <option value="0.5">0.5</option>
+                <option value="0.75">0.75</option>
+                <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="4">4</option>
                 <option value="8">8</option>

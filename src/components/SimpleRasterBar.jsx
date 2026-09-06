@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import styles from "./SimpleRasterBar.module.css";
 
 
-export default function SimpleRasterBar({ colorArray, speed, stretchFactor, interlace, width }) {
+export default function SimpleRasterBar({ colorArray, speed, stretchFactor, sizeMultiplier = 1, interlace, width }) {
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
 
@@ -44,7 +44,7 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
     const draw = (timestamp) => {
       const colorBuffer = bufferRef.current;
       const bufferHeight = colorBuffer.length;
-      const visibleHeight = bufferHeight / 2;
+      const visibleHeight = Math.round((bufferHeight / 2) * sizeMultiplier);
 
       const canvasWidth = canvas.parentElement.offsetWidth;
       canvas.width = canvasWidth;
@@ -78,7 +78,7 @@ export default function SimpleRasterBar({ colorArray, speed, stretchFactor, inte
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [speed]);
+  }, [speed, sizeMultiplier]);
 
   return (
     <section
